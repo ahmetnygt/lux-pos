@@ -95,7 +95,8 @@ const PosPanel = ({ table, onClose, onUpdate }) => {
     const pendingTotal = pendingItems.reduce((acc, item) => acc + item.lineTotal, 0);
     const totalAmount = order ? parseFloat(order.total_amount) : 0;
     const paidAmount = order ? parseFloat(order.paid_amount || 0) : 0;
-    const remaining = totalAmount - paidAmount;
+    const discountAmount = order ? parseFloat(order.discount_amount || 0) : 0; // YENİ
+    const remaining = totalAmount - paidAmount - discountAmount; // YENİ
 
     return (
         <div style={{ position: 'absolute', top: 0, right: 0, width: '900px', height: '100%', backgroundColor: 'var(--bg-color)', boxShadow: '-5px 0 20px rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column', zIndex: 1000, borderLeft: '2px solid var(--primary-color)' }}>
@@ -162,6 +163,11 @@ const PosPanel = ({ table, onClose, onUpdate }) => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-muted)', marginBottom: '5px' }}>
                             <span>Adisyon Toplamı:</span><span>₺{totalAmount.toFixed(2)}</span>
                         </div>
+                        {discountAmount > 0 && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#ffc107', marginBottom: '5px' }}>
+                                <span>İskonto (İndirim):</span><span>- ₺{discountAmount.toFixed(2)}</span>
+                            </div>
+                        )}
                         {paidAmount > 0 && (
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#00ffcc', marginBottom: '5px' }}>
                                 <span>Ödenen:</span><span>- ₺{paidAmount.toFixed(2)}</span>
@@ -203,9 +209,10 @@ const PosPanel = ({ table, onClose, onUpdate }) => {
             {showCheckout && (
                 <CheckoutModal
                     order={order} tableId={table.id} onClose={() => setShowCheckout(false)}
+                    onRefresh={() => fetchOrder()} // YENİ: İndirim girilince pencereyi kapatmadan veriyi yeniler
                     onSuccess={(isFullyPaid) => {
                         setShowCheckout(false);
-                        if (onUpdate) onUpdate(); // SİSTEM BİLGİSİ: Tahsilat yapıldı, haritayı (renkleri) güncelle
+                        if (onUpdate) onUpdate();
                         if (isFullyPaid) onClose(); else fetchOrder();
                     }}
                 />

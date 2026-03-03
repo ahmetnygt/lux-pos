@@ -1,42 +1,40 @@
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 
-// Tüm menüyü (Kategoriler ve içindeki ürünlerle birlikte) getir
 exports.getFullMenu = async (req, res) => {
     try {
-        console.log('Sistem Bilgisi: Kapsamlı menü verisi talep ediliyor...');
-        const categories = await Category.findAll({
-            include: [{ model: Product, required: false }] // Ürünü olmayan kategoriler de gelsin
-        });
+        const categories = await Category.findAll({ include: [{ model: Product, required: false }] });
         res.status(200).json(categories);
-    } catch (error) {
-        console.error('Sistem Hatası: Menü verileri getirilirken hata oluştu.', error);
-        res.status(500).json({ message: 'Menü yüklenemedi.' });
-    }
+    } catch (error) { res.status(500).json({ message: 'Menü yüklenemedi.' }); }
 };
 
-// Yeni Kategori Ekle (Örn: Kokteyller, Şişeler)
+exports.getAllCategories = async (req, res) => {
+    try { res.status(200).json(await Category.findAll()); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+
+exports.getAllProducts = async (req, res) => {
+    try { res.status(200).json(await Product.findAll({ include: [{ model: Category, attributes: ['name'] }] })); }
+    catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+
 exports.createCategory = async (req, res) => {
-    try {
-        const { name, color_code } = req.body;
-        const newCategory = await Category.create({ name, color_code });
-        console.log(`Sistem Bilgisi: Yeni kategori eklendi. ID: ${newCategory.id}, İsim: ${newCategory.name}`);
-        res.status(201).json(newCategory);
-    } catch (error) {
-        console.error('Sistem Hatası: Kategori oluşturulurken hata meydana geldi.', error);
-        res.status(500).json({ message: 'Kategori oluşturulamadı.' });
-    }
+    try { res.status(201).json(await Category.create(req.body)); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+// YENİ: Kategori Düzenle ve Sil
+exports.updateCategory = async (req, res) => {
+    try { await Category.update(req.body, { where: { id: req.params.id } }); res.status(200).json({ message: 'OK' }); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+exports.deleteCategory = async (req, res) => {
+    try { await Category.destroy({ where: { id: req.params.id } }); res.status(200).json({ message: 'OK' }); } catch (error) { res.status(500).json({ message: 'İçinde ürün var silinemez!' }); }
 };
 
-// Yeni Ürün Ekle (Örn: Chivas Regal 70cl, Long Island)
 exports.createProduct = async (req, res) => {
-    try {
-        const { category_id, name, price } = req.body;
-        const newProduct = await Product.create({ category_id, name, price });
-        console.log(`Sistem Bilgisi: Yeni ürün eklendi. Ürün: ${newProduct.name}, Fiyat: ₺${newProduct.price}`);
-        res.status(201).json(newProduct);
-    } catch (error) {
-        console.error('Sistem Hatası: Ürün sisteme eklenirken hata meydana geldi.', error);
-        res.status(500).json({ message: 'Ürün eklenemedi.' });
-    }
+    try { res.status(201).json(await Product.create(req.body)); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+// YENİ: Ürün Düzenle ve Sil
+exports.updateProduct = async (req, res) => {
+    try { await Product.update(req.body, { where: { id: req.params.id } }); res.status(200).json({ message: 'OK' }); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+exports.deleteProduct = async (req, res) => {
+    try { await Product.destroy({ where: { id: req.params.id } }); res.status(200).json({ message: 'OK' }); } catch (error) { res.status(500).json({ message: 'Hata' }); }
 };

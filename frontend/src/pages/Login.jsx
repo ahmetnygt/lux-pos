@@ -81,54 +81,6 @@ const Login = () => {
             boxSizing: 'border-box',
             fontFamily: 'sans-serif'
         }}>
-
-            {/* SİSTEM BİLGİSİ: Responsive tasarım için içine CSS Media Query gömdük */}
-            <style>
-                {`
-          .login-container {
-            display: flex;
-            flex-direction: row;
-            background-color: #0a0a0a;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
-            width: 100%;
-            max-width: 800px; /* PC'de yan yana durması için genişlettik */
-            border: 1px solid #222;
-            border-top: 4px solid var(--primary-color);
-            gap: 40px;
-          }
-          .login-left {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-          .login-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-          .divider {
-            width: 1px;
-            background-color: #333;
-          }
-          /* MOBİL EKRANLAR İÇİN */
-          @media (max-width: 768px) {
-            .login-container {
-              flex-direction: column;
-              max-width: 400px;
-              padding: 30px 20px;
-              gap: 20px;
-            }
-            .divider {
-              display: none; /* Mobilde aradaki çizgiyi yok et */
-            }
-          }
-        `}
-            </style>
-
             <div className="login-container">
 
                 {/* SOL TARAF: Logolar ve PIN Kutuları */}

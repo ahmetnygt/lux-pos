@@ -26,6 +26,9 @@ const Order = sequelize.define('Order', {
     paid_amount: {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.00
+    },
+    discount_amount: {
+        type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00
     }
 }, {
     tableName: 'orders',

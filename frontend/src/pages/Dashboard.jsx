@@ -149,6 +149,19 @@ const Dashboard = () => {
                         <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '1px' }}>MENÜ & ÜRÜNLER</span>
                     </button>
 
+                    <button
+                        onClick={() => navigate('/personnel')}
+                        style={{
+                            backgroundColor: '#1a1a1a', border: '1px solid #333', padding: '30px 20px', borderRadius: '12px',
+                            color: '#ffc107', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px'
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ffc107'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    >
+                        <span style={{ fontSize: '40px' }}>👥</span>
+                        <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '1px' }}>İNSAN KAYNAKLARI</span>
+                    </button>
+
                 </div>
 
             </div>

@@ -2,35 +2,25 @@ const Recipe = require('../models/Recipe');
 const Product = require('../models/Product');
 const Ingredient = require('../models/Ingredient');
 
-// Bir ürünün içindeki hammaddeleri (reçeteyi) getir
 exports.getProductRecipe = async (req, res) => {
     try {
-        const { product_id } = req.params;
-
-        // Ürünü bul ve içindeki hammaddeleri miktar (amount_used) ile beraber çek
-        const product = await Product.findByPk(product_id, {
-            include: [{
-                model: Ingredient,
-                through: { attributes: ['amount_used'] } // Sadece kullanılan miktarı al
-            }]
+        const product = await Product.findByPk(req.params.product_id, {
+            include: [{ model: Ingredient, through: { attributes: ['amount_used'] } }]
         });
-
-        if (!product) return res.status(404).json({ message: 'Ürün bulunamadı.' });
+        if (!product) return res.status(404).json({ message: 'Yok' });
         res.status(200).json(product);
-    } catch (error) {
-        console.error('Reçete Hatası:', error);
-        res.status(500).json({ message: 'Reçete çekilemedi.' });
-    }
+    } catch (error) { res.status(500).json({ message: 'Hata' }); }
 };
 
-// Ürüne yeni hammadde bağla (Örn: Votka Enerjiye -> 5 cl Votka ekle)
 exports.addIngredientToRecipe = async (req, res) => {
+    try { res.status(201).json(await Recipe.create(req.body)); } catch (error) { res.status(500).json({ message: 'Hata' }); }
+};
+
+// YENİ: Reçeteden Hammadde Silme
+exports.removeIngredientFromRecipe = async (req, res) => {
     try {
-        const { product_id, ingredient_id, amount_used } = req.body;
-        const recipe = await Recipe.create({ product_id, ingredient_id, amount_used });
-        res.status(201).json({ message: 'Reçete güncellendi', recipe });
-    } catch (error) {
-        console.error('Reçete Kayıt Hatası:', error);
-        res.status(500).json({ message: 'Reçeteye ürün eklenemedi.' });
-    }
+        const { product_id, ingredient_id } = req.params;
+        await Recipe.destroy({ where: { product_id, ingredient_id } });
+        res.status(200).json({ message: 'Formülden çıkarıldı.' });
+    } catch (error) { res.status(500).json({ message: 'Silinemedi.' }); }
 };

@@ -24,6 +24,9 @@ const menuRoutes = require('./routes/menuRoutes')
 const orderRoutes = require('./routes/orderRoutes');
 const ingredientRoutes = require('./routes/ingredientRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes'); // Yukarıya importlara ekle
 
 const app = express();
 
@@ -56,6 +59,9 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ingredients', ingredientRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 
 // API Durum Kontrol Ucu
 app.get('/', (req, res) => {

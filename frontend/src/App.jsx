@@ -6,6 +6,7 @@ import TableMap from './components/TableMap';
 import Dashboard from './pages/Dashboard';
 import PosScreen from './pages/PosScreen';
 import MenuManagement from './pages/MenuManagement';
+import PersonnelManagement from './pages/PersonnelManagement';
 
 // SİSTEM BİLGİSİ: Kapıdaki Titiz Badigard (Güvenlik Kalkanı)
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -64,6 +65,12 @@ const App = () => {
         <Route path="/menu-management" element={
           <ProtectedRoute allowedRoles={['Admin']}>
             <MenuManagement />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/personnel" element={
+          <ProtectedRoute allowedRoles={['Admin']}>
+            <PersonnelManagement />
           </ProtectedRoute>
         } />
 

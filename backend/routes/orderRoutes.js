@@ -10,10 +10,16 @@ router.post('/table/:table_id/add-item', orderController.addItemToOrder);
 
 router.post('/table/:table_id/pay', orderController.processPayment);
 
+// SİSTEM BİLGİSİ: İskonto Rotası
+router.post('/table/:table_id/discount', orderController.applyDiscount);
+
+router.post('/table/:table_id/remove-discount', orderController.removeDiscount);
+
 // Sepetteki tüm ürünleri tek pakette alır
 router.post('/table/:table_id/add-multiple', orderController.addMultipleItemsToOrder);
 
 // Kasa ekranındaki canlı özet panelini besler
 router.get('/summary/live', orderController.getLiveSummary);
+
 
 module.exports = router;
