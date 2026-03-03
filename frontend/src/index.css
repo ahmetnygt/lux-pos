@@ -1,0 +1,69 @@
+:root {
+  /* Lux POS Varsayılan Dark Tema Değişkenleri */
+  --bg-color: #0d0d0d;
+  /* Tok, mat siyah arka plan */
+  --surface-color: #1a1a1a;
+  /* Kartlar ve formlar için bir tık açık siyah */
+  --primary-color: #F3D431;
+  /* Baskın Lux Altın Sarısı (Vurgular ve butonlar) */
+  --text-color: #ffffff;
+  /* Ana metinler */
+  --text-muted: #aaaaaa;
+  /* Sönük metinler */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  /* Sistem Bilgisi: Varsayılan yazı tipi Montserrat olarak güncellenmiştir */
+  font-family: 'Montserrat', sans-serif !important;
+  height: 100vh;
+}
+
+/* Evrensel Input Stilleri */
+input {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid #333333;
+  padding: 15px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  outline: none;
+  font-size: 16px;
+  /* Sistem Bilgisi: Input alanlarına özel yazı tipi kalıtımı */
+  font-family: inherit;
+}
+
+input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px rgba(243, 212, 49, 0.3);
+  /* Hafif bir sarı ışıltı */
+}
+
+/* Evrensel Buton Stilleri */
+button {
+  background-color: var(--primary-color);
+  color: #000000;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: 700;
+  /* Sistem Bilgisi: Buton metin kalınlığı artırıldı */
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  letter-spacing: 1px;
+  /* Sistem Bilgisi: Daha estetik görünüm için harf arası boşluk */
+}
+
+button:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 15px rgba(243, 212, 49, 0.5);
+  /* Daha güçlü sarı ışıltı */
+}
