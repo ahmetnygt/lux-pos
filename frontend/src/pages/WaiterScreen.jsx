@@ -5,12 +5,13 @@ import axios from 'axios';
 import MobileOrderPanel from '../components/MobileOrderPanel'; // BUNU EKLE
 import logoImg from '../assets/logo.png';
 
+const socket = io('http://localhost:5000');
+
 const WaiterScreen = () => {
     const [tables, setTables] = useState([]);
     const navigate = useNavigate();
     const [selectedTable, setSelectedTable] = useState(null); // Tıklanan masayı tutar
 
-    const socket = io('http://localhost:5000');
 
     // Garson giriş yapmış mı kontrolü
     const user = JSON.parse(localStorage.getItem('lux_user'));

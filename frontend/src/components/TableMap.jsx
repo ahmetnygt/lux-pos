@@ -5,13 +5,14 @@ import axios from 'axios';
 import PosPanel from './PosPanel';
 import LiveDashboard from './LiveDashboard'; // BUNU EKLİYORSUN
 
+const socket = io('http://localhost:5000');
+
 // Sistem Bilgisi: isEditMode prop'u ile Yönetim ve Satış ekranı davranışları ayrıştırıldı
 const TableMap = ({ isEditMode = false }) => {
     const [tables, setTables] = useState([]);
     const [newTableName, setNewTableName] = useState('');
     const [selectedTable, setSelectedTable] = useState(null);
 
-    const socket = io('http://localhost:5000');
 
     // SİSTEM BİLGİSİ: Radar Motoru (Masaları Çek)
     const fetchTables = async () => {

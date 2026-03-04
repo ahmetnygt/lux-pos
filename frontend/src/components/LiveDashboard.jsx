@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
+const socket = io('http://localhost:5000');
+
 const LiveDashboard = () => {
     const [time, setTime] = useState(new Date());
     const [summary, setSummary] = useState(null);
 
-    const socket = io('http://localhost:5000');
 
     // Dijital Saat Motoru
     useEffect(() => {
