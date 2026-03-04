@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Stage, Layer, Rect, Text, Group } from 'react-konva';
+import { io } from 'socket.io-client';
 import axios from 'axios';
 import PosPanel from './PosPanel';
 import LiveDashboard from './LiveDashboard'; // BUNU EKLİYORSUN
@@ -9,6 +10,8 @@ const TableMap = ({ isEditMode = false }) => {
     const [tables, setTables] = useState([]);
     const [newTableName, setNewTableName] = useState('');
     const [selectedTable, setSelectedTable] = useState(null);
+
+    const socket = io('http://localhost:5000');
 
     // SİSTEM BİLGİSİ: Radar Motoru (Masaları Çek)
     const fetchTables = async () => {
@@ -23,13 +26,13 @@ const TableMap = ({ isEditMode = false }) => {
     useEffect(() => {
         fetchTables();
 
-        // BÜTÜN BÜYÜ BURADA: Kasa ekranı her 3 saniyede bir çaktırmadan masalara bakar
-        // Garson telefondan siparişi çaktığı an, kasa en geç 3 saniye içinde masayı kırmızı görür.
-        const interval = setInterval(() => {
+        socket.on('updateTables', () => {
             fetchTables();
-        }, 3000);
+        });
 
-        return () => clearInterval(interval); // Sayfadan çıkınca radarı kapat
+        return () => {
+            socket.off('updateTables');
+        };
     }, []);
 
     const handleAddTable = async (e) => {

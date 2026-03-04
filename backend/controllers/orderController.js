@@ -105,6 +105,9 @@ exports.processPayment = async (req, res) => {
 
         const newPaidAmount = currentPaid + amountToPay;
 
+        req.app.get('io').emit('updateTables');
+        req.app.get('io').emit('updateDashboard');
+
         if (newPaidAmount >= (totalAmount - discountAmount) - 0.01) {
             await order.update({ paid_amount: totalAmount, status: 'Ödendi' });
             await Table.update({ status: 'Boş' }, { where: { id: table_id } });
@@ -184,6 +187,9 @@ exports.addMultipleItemsToOrder = async (req, res) => {
             message: `📝 ${items.length} çeşit ürün siparişi girildi.`,
             status: 'Siparişte'
         });
+
+        req.app.get('io').emit('updateTables');
+        req.app.get('io').emit('updateDashboard');
 
         res.status(200).json({ message: 'Siparişler başarıyla eklendi.' });
 
@@ -265,6 +271,8 @@ exports.applyDiscount = async (req, res) => {
             return res.status(200).json({ message: 'İskonto ile hesap kapandı.', isFullyPaid: true });
         }
 
+        req.app.get('io').emit('updateDashboard');
+
         res.status(200).json({ message: 'İskonto eklendi', isFullyPaid: false });
     } catch (error) {
         console.error('İskonto Hatası:', error);
@@ -283,6 +291,8 @@ exports.removeDiscount = async (req, res) => {
 
         const table = await Table.findByPk(table_id);
         await SystemLog.create({ table_name: table.name, message: `🔄 İskonto iptal edildi (Sıfırlandı).`, status: 'Siparişte' });
+
+        req.app.get('io').emit('updateDashboard');
 
         res.status(200).json({ message: 'İskonto sıfırlandı.' });
     } catch (error) {

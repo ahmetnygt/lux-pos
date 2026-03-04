@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
 import axios from 'axios';
 import MobileOrderPanel from '../components/MobileOrderPanel'; // BUNU EKLE
 import logoImg from '../assets/logo.png';
@@ -8,6 +9,8 @@ const WaiterScreen = () => {
     const [tables, setTables] = useState([]);
     const navigate = useNavigate();
     const [selectedTable, setSelectedTable] = useState(null); // Tıklanan masayı tutar
+
+    const socket = io('http://localhost:5000');
 
     // Garson giriş yapmış mı kontrolü
     const user = JSON.parse(localStorage.getItem('lux_user'));
@@ -30,9 +33,15 @@ const WaiterScreen = () => {
         }
 
         fetchTables();
-        // Garson hareket halindeyken masaların durumunu her 5 saniyede bir çaktırmadan güncelle
-        const interval = setInterval(fetchTables, 5000);
-        return () => clearInterval(interval);
+
+        // Kasa masayı kapatırsa, garsonun ekranı anında tazelenir
+        socket.on('updateTables', () => {
+            fetchTables();
+        });
+
+        return () => {
+            socket.off('updateTables');
+        };
     }, [navigate, user]);
 
     const handleLogout = () => {
