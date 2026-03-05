@@ -191,6 +191,8 @@ exports.addMultipleItemsToOrder = async (req, res) => {
         req.app.get('io').emit('updateTables');
         req.app.get('io').emit('updateDashboard');
 
+        req.app.get('io').emit('printTicket', { table_name: table.name, items: items });
+
         res.status(200).json({ message: 'Siparişler başarıyla eklendi.' });
 
     } catch (error) {
@@ -298,5 +300,15 @@ exports.removeDiscount = async (req, res) => {
     } catch (error) {
         console.error('İskonto İptal Hatası:', error);
         res.status(500).json({ message: 'İskonto iptal edilemedi.' });
+    }
+};
+
+exports.triggerPrintReceipt = async (req, res) => {
+    try {
+        req.app.get('io').emit('printReceipt', req.body);
+        res.status(200).json({ message: 'Fiş sinyali dükkana gönderildi.' });
+    } catch (error) {
+        console.error('Yazdırma Sinyali Hatası:', error);
+        res.status(500).json({ message: 'Sinyal gönderilemedi.' });
     }
 };

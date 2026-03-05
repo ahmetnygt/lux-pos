@@ -21,5 +21,6 @@ router.post('/table/:table_id/add-multiple', orderController.addMultipleItemsToO
 // Kasa ekranındaki canlı özet panelini besler
 router.get('/summary/live', orderController.getLiveSummary);
 
+router.post('/print-receipt', orderController.triggerPrintReceipt);
 
 module.exports = router;
