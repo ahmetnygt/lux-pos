@@ -92,6 +92,31 @@ const PosPanel = ({ table, onClose, onUpdate }) => {
         }
     };
 
+    const handlePrintAdisyon = async () => {
+        if (!order || !order.OrderItems || order.OrderItems.length === 0) return;
+        try {
+            const formattedItems = Object.values(order.OrderItems.reduce((acc, item) => {
+                const key = item.product_id;
+                if (!acc[key]) acc[key] = { name: item.Product?.name || item.name, qty: 0, price: 0 };
+                acc[key].qty += item.quantity || 1;
+                acc[key].price += parseFloat(item.price);
+                return acc;
+            }, {}));
+
+            await axios.post('http://localhost:5000/api/orders/print-receipt', {
+                table_name: table.name,
+                items: formattedItems,
+                total: totalAmount,
+                paid: paidAmount,
+                discount: discountAmount,
+                remaining: remaining
+            });
+        } catch (printErr) {
+            console.error("Yazdırılamadı:", printErr);
+            alert("Yazıcıya gönderilemedi!");
+        }
+    };
+
     const pendingTotal = pendingItems.reduce((acc, item) => acc + item.lineTotal, 0);
     const totalAmount = order ? parseFloat(order.total_amount) : 0;
     const paidAmount = order ? parseFloat(order.paid_amount || 0) : 0;
@@ -178,10 +203,13 @@ const PosPanel = ({ table, onClose, onUpdate }) => {
                         </div>
 
                         {pendingItems.length > 0 ? (
-                            <button onClick={handleSendPendingOrders} style={{ width: '100%', marginTop: '15px', backgroundColor: '#00ffcc', color: '#000', fontSize: '18px', padding: '15px', animation: 'pulse 1.5s infinite' }}>🚀 SİPARİŞİ GÖNDER</button>
+                            <button onClick={handleSendPendingOrders} style={{ width: '100%', marginTop: '15px', backgroundColor: '#00ffcc', color: '#000', fontSize: '18px', padding: '15px', animation: 'pulse 1.5s infinite', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>🚀 SİPARİŞİ GÖNDER</button>
                         ) : (
                             order && remaining > 0 && order.OrderItems.length > 0 && (
-                                <button onClick={() => setShowCheckout(true)} style={{ width: '100%', marginTop: '15px', backgroundColor: '#ff4444', color: 'white', fontSize: '18px', padding: '15px', fontWeight: 'bold' }}>💳 HESABI KAPAT / ÖDEME AL</button>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                                    <button onClick={handlePrintAdisyon} style={{ flex: 1, backgroundColor: '#ffc107', color: '#000', fontSize: '15px', padding: '15px', fontWeight: 'bold', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>🖨️ ADİSYON YAZDIR</button>
+                                    <button onClick={() => setShowCheckout(true)} style={{ flex: 1, backgroundColor: '#ff4444', color: 'white', fontSize: '15px', padding: '15px', fontWeight: 'bold', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>💳 ÖDEME AL</button>
+                                </div>
                             )
                         )}
                     </div>

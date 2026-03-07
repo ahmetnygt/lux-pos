@@ -57,33 +57,8 @@ const CheckoutModal = ({ order, tableId, onClose, onRefresh, onSuccess }) => {
                 payment_method: method
             });
 
-            // ---------------------------------------------------------
-            // BÜTÜN BÜYÜ BURADA: TAHSİLAT YAPILDI, YAZICIYA SİNYALİ ÇAK!
-            // ---------------------------------------------------------
-            try {
-                // Sadece seçili ürünler ödendiyse onları, yoksa masadaki tüm ödenmemişleri fişe bas
-                const itemsToPrint = selectedItems.length > 0 ? selectedItems : unpaidItems;
-                const formattedItems = Object.values(itemsToPrint.reduce((acc, item) => {
-                    const key = item.product_id;
-                    if (!acc[key]) acc[key] = { name: item.Product?.name || item.name, qty: 0, price: 0 };
-                    acc[key].qty += item.quantity || 1;
-                    acc[key].price += parseFloat(item.price);
-                    return acc;
-                }, {}));
-
-                await axios.post('http://localhost:5000/api/orders/print-receipt', {
-                    table_name: `Kasa (Masa ${tableId})`,
-                    items: formattedItems,
-                    total: totalAmount,
-                    paid: payAmount,
-                    discount: discountAmount,
-                    remaining: remaining - parseFloat(payAmount),
-                    payment_method: method
-                });
-            } catch (printErr) {
-                console.error("Fiş sinyali ajana gönderilemedi:", printErr);
-            }
-            // ---------------------------------------------------------
+            // SİSTEM BİLGİSİ: Otomatik yazdırma kodlarını buradan sildik! 
+            // Sadece ödemeyi alıp ekranı kapatıyor.
 
             if (res.data.isFullyPaid) onSuccess(true);
             else onSuccess(false);

@@ -191,7 +191,14 @@ exports.addMultipleItemsToOrder = async (req, res) => {
         req.app.get('io').emit('updateTables');
         req.app.get('io').emit('updateDashboard');
 
-        req.app.get('io').emit('printTicket', { table_name: table.name, items: items });
+        const personelAdi = req.user ? (req.user.name || req.user.username || req.user.role) : "Kasa / Sistem";
+
+        // BAR/MUTFAK YAZICISINA SİPARİŞİ FIRLAT
+        req.app.get('io').emit('printTicket', {
+            table_name: table.name,
+            items: items,
+            waiter: personelAdi // BÜTÜN BÜYÜ BURADA: Pakete garsonu ekledik!
+        });
 
         res.status(200).json({ message: 'Siparişler başarıyla eklendi.' });
 
